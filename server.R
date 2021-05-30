@@ -9,9 +9,11 @@ shinyServer(function(input, output, session){
   
   observeEvent(input$validate, {
     # message(ccnumber())
+    ccnumber <- ccnumber()
+    vldt <- validity(ccnumber)
+    
     output$validity <- renderUI({
-      vldt <- validity(ccnumber())
-      if(ccnumber() == "") return(NULL)
+      if(ccnumber == "") return(NULL)
       if(vldt == "VALID!"){
         # message(vldt)
         h1(vldt, 
@@ -33,28 +35,25 @@ shinyServer(function(input, output, session){
                     color: red;")
       }
     })
+    
+    output$cardtype <- renderImage({
+      list(src = paste0("www/type/", cardtype(ccnumber),".png"),
+             contentType = 'image/png',
+             width = 100
+             # height = 50
+             )
+    }, deleteFile = FALSE)
+    
+    output$bank <- renderImage({
+      list(src = paste0("www/bank/", bank(ccnumber)[1],".png"),
+           contentType = 'image/png',
+           height = 60)
+    }, deleteFile = FALSE)
   })
   
   
   
-  output$cardtype <- renderImage({
-    ccnumber <- ccnumber()
-    if(ccnumber == "") return(NULL)
-    list(src = paste0("www/type/", cardtype(ccnumber),".png"),
-         contentType = 'image/png',
-         width = 90,
-         # height = 50,
-         alt = "This is alternate text")
-  }, deleteFile = FALSE)
   
-  output$bank <- renderImage({
-    ccnumber <- ccnumber()
-    if(ccnumber == "") return(NULL)
-    list(src = paste0("www/bank/", bank(ccnumber)[1],".png"),
-         contentType = 'image/png',
-         width = 100,
-         alt = "This is alternate text")
-  }, deleteFile = FALSE)
   
   # output$cardlevel <- renderUI({
   #   ccnumber <- ccnumber()

@@ -47,8 +47,19 @@ length_valid <- data.frame(MasterCard = 16, #c(14, 15, 16),
                           enRoute = c(15, NA, NA),
                           Voyager = c(15, NA, NA))
 
+validity <- function(ccnumber){
+  ifelse(test = nchar(ccnumber) == 16, 
+         yes = ifelse(test = tbl_genap(ccnumber) %% 10 == 0,
+                      yes = "VALID!", no = "INVALID!"), 
+         no = "Only 16 digits support")
+}
+
+# validity(ccnumber)
+
+
 cardtype <- function(ccnumber){
-  type <- ifelse(nchar(ccnumber) %in% length_valid$MasterCard & substr(ccnumber, 1, 2) %in% jenis_kartu$MasterCard, "MasterCard",
+  type <- ifelse(validity(ccnumber) == "VALID!", 
+                 ifelse(nchar(ccnumber) %in% length_valid$MasterCard & substr(ccnumber, 1, 2) %in% jenis_kartu$MasterCard, "MasterCard",
                    ifelse(nchar(ccnumber) %in% length_valid$Visa & substr(ccnumber, 1, 1) %in% jenis_kartu$Visa, "Visa",
                           ifelse(nchar(ccnumber) %in% length_valid$American_Express & substr(ccnumber, 1, 2) %in% jenis_kartu$American_Express, "American Express",
                                  ifelse(nchar(ccnumber) %in% length_valid$Diners_Club & substr(ccnumber, 1, 2) %in% jenis_kartu$Diners_Club, "Diners Club",
@@ -56,30 +67,26 @@ cardtype <- function(ccnumber){
                                                  ifelse(nchar(ccnumber) %in% length_valid$BANKCARD & substr(ccnumber, 1, 2) %in% jenis_kartu$BANKCARD, "BANKCARD",
                                                         ifelse(nchar(ccnumber) %in% length_valid$DISCOVER_CARD & substr(ccnumber, 1, 2) %in% jenis_kartu$DISCOVER_CARD, "DISCOVER CARD",
                                                                ifelse(nchar(ccnumber) %in% length_valid$enRoute & substr(ccnumber, 1, 2) %in% jenis_kartu$enRoute, "enRoute",
-                                                                      ifelse(nchar(ccnumber) %in% length_valid$Voyager & substr(ccnumber, 1, 2) %in% jenis_kartu$Voyager, "Voyager", "Unregistered")))))))))
+                                                                      ifelse(nchar(ccnumber) %in% length_valid$Voyager & substr(ccnumber, 1, 2) %in% jenis_kartu$Voyager, "Voyager", "Unregistered"))))))))), "Unregistered")
   return(type)
 }
 
 # cardtype(ccnumber)
 
-validity <- function(ccnumber){
-  ifelse(test = nchar(ccnumber) == 16, 
-         yes = ifelse(test = tbl_genap(ccnumber) %% 10 == 0 & cardtype(ccnumber) %in% names(jenis_kartu),
-                      yes = "VALID!", no = "INVALID!"), 
-         no = "Only 16 digits support")
-}
-
-# validity(ccnumber)
 
 bank_tipe <- read.table(file = "bank-list.txt", header = TRUE, sep = ",", stringsAsFactor = FALSE)
 
 bank <- function(ccnumber){
+  if(validity(ccnumber) == "INVALID!"){
+    x <- "na"
+  }
   if((cardtype(ccnumber) == "Visa" | cardtype(ccnumber) == "MasterCard") & nrow(bank_tipe[bank_tipe$KODE == substr(ccnumber, 1, 6),]) > 0){
     x <- as.character(bank_tipe[bank_tipe$KODE == substr(ccnumber, 1, 6), 2:3])
     return(x)
   } else {
     x <- "na"
   }
+  return(x)
 }
 
 # bank(ccnumber)
