@@ -9,3 +9,6 @@ When I was working in a telemarketing insurance company as a data analyst, I fou
 So I decided to create a fast enough way to solve this problem. Once, I use Microsoft Excel as user interface and use it formula. 
 
 Now I use shiny to create a more pleasing user interface.
+
+https://aephiday25.shinyapps.io/validatecc 
+
