@@ -103,6 +103,13 @@ body {
   left: 60px;
 }
 
+.credit-card .disclaimer {
+  position: absolute;
+  height: 80px;
+  top: 150px;
+  left: 160px;
+}
+
 :-moz-submit-invalid {
   box-shadow: none;
 }
@@ -187,6 +194,9 @@ body {
 <body translate="no" >
   <div class='credit-card'>
     <img src="chip.png" class="chip">
+    <div class="disclaimer">
+      <p style="font-size: 80%;">No Worries!<br/>We don't save your card number or any information provided.<br/>We use it just to validate and lookup information into system and visualize it.<br/>After you close or refresh the page, all informations will be lost at all.</p>
+    </div>
     <div class="cardlabel">Card Number</div>
   	<div class="number multifield form-group shiny-input-container">
   		<input id="num1" class="form-control" type="text" maxlength="4" inputmode='numeric' pattern="\d+" autofocus>
